@@ -37,6 +37,9 @@ call:clearScreen
 :: NOTES
 echo PLEASE NOTE:
 echo.
+echo - Your internet connection will be disabled temporarily! Make sure you don't
+echo   have any downloads in progress!
+echo.
 echo - This must be ran as Administrator to reset network adapters.
 echo   To run it ads admin by default, make a SHORTCUT to the .bat file,
 echo   right-click it, select "Advanced", and check the "Run as Administrator" box.
@@ -47,9 +50,12 @@ echo - To set options, right-click the .bat file and select "Edit"
 
 echo.
 echo.
+echo.
 
 :: Wait for continue
-pause
+echo Aight. Press any key to start. Please don't panic when the colors change.
+pause > NUL
+
 
 echo.
 echo.
