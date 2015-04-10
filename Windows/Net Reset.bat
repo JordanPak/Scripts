@@ -12,15 +12,15 @@
 :: SET YOUR OPTIONS HERE!! ::
 
 :: Change "Ethernet" to the name of your network adapter
-SET network-interface-name="Ethernet" > NUL
+SET network-interface-name="Ethernet"
 
 
 :: Change "5" to the number of pings you'd like to do
-SET num-pings=5 > NUL
+SET num-pings=5
 
 
 :: Change "google.com" to your ping target
-SET ping-target="google.com" > NUL
+SET ping-target="google.com"
 
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -29,6 +29,7 @@ SET ping-target="google.com" > NUL
 :: Set color & title
 color 0F
 title Reset Network Stuff
+
 
 :: TITLE
 call:clearScreen
@@ -48,17 +49,16 @@ echo - To reset network adapters, the correct name must be set in the options
 echo.
 echo - To set options, right-click the .bat file and select "Edit"
 
-echo.
-echo.
-echo.
+call:space-lg
+
 
 :: Wait for continue
-echo Aight. Press any key to start. Please don't panic when the colors change.
+echo Aight. Press any key to start.
 pause > NUL
 
 
-echo.
-echo.
+call:space-md
+
 
 :: Clear Screen
 call:clearScreen
@@ -67,65 +67,68 @@ call:clearScreen
 :: Start script notification
 echo Starting Script...
 
+
 :: Timeout & color
 TIMEOUT /T 1 > NUL
 color 0E
 
-echo.
-echo.
-echo.
+
+
+:: Clear Screen and Show Progress
+call:clearScreen
+call:showProgress 0, 0, 0, 0, 0
+
 
 
 :: RELEASE
-echo // RELEASE IP //
+echo Releasing IP...
 ipconfig /Release > NUL
 
-echo.
-echo IPv4 Released
 
-echo.
-echo.
-echo.
+
+call:clearScreen
+call:showProgress 1, 0, 0, 0, 0
+
 
 
 :: RESET NETWORK ADAPTER
-echo // RESET NETWORK ADAPTER //
-
+echo Resetting Network Adapter...
 netsh interface set interface %network-interface-name% DISABLED
-
-echo Ethernet Disabled
-
 netsh interface set interface %network-interface-name% ENABLED
 
-echo Ethernet Enabled
 
-echo.
-echo.
-echo.
+call:clearScreen
+call:showProgress 1, 1, 0, 0, 0
 
 
-:: RENEW
-echo // RENEW IP //
+
+:: RENEW IP
+echo Renewing IP...
 ipconfig /Renew > NULd
 
 echo.
 
 ipconfig | findstr IPv4
 
-echo.
-echo.
-echo.
+TIMEOUT /T 2 > NUL
 
-echo // FLUSH DNS //
+
+call:clearScreen
+call:showProgress 1, 1, 1, 0, 0
+
+
+
+echo Flushing DNS...
 ipconfig /flushdns
 
-echo.
-echo.
-echo.
+
+call:clearScreen
+call:showProgress 1, 1, 1, 1, 0
 
 
-:: Ping Test
-echo // PING TEST //
+
+:: PING TEST
+echo Ping Test...
 
 echo.
 
@@ -134,8 +137,8 @@ echo Press CTRL + C to quit.
 ping -n %num-pings% %ping-target%
 
 
-echo.
-echo.
+call:space-md
+
 
 :: Color again
 color 0A
@@ -146,7 +149,33 @@ pause > NUL
 
 
 
-:: FUNCTIONS
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+:: FUNCTIONS ::
+
+
+:: MEDIUM SPACE
+:space-md
+
+echo.
+echo.
+
+GOTO:EOF
+
+
+
+:: LARGE SPACE
+:space-lg
+
+echo.
+echo.
+echo.
+
+GOTO:EOF
+
+
+
+:: CLEAR SCREEN & SHOW HEADER
 :clearScreen
 
 cls
@@ -157,5 +186,56 @@ echo //---------------------//
 echo // By Jordan Pakrosnis //
 echo //---------------------//
 
+call:space-md
+
+GOTO:EOF
+
+
+
+:: SHOW PROGRESS
+:showProgress
+
+:: Release IP
+if "%~1"=="1" (
+	echo   [$] Release IP
+) else (
+	echo   [ ] Release IP
+)
+
 echo.
+
+:: Reset Network Adapter
+if "%~2"=="1" (
+	echo   [$] Reset Network Adapter
+) else (
+	echo   [ ] Reset Network Adapter
+)
+
 echo.
+
+:: Renew IP
+if "%~3"=="1" (
+	echo   [$] Renew IP
+) else (
+	echo   [ ] Renew IP
+)
+
+echo.
+
+:: Flush DNS
+if "%~4"=="1" (
+	echo   [$] Flush DNS
+) else (
+	echo   [ ] Flush DNS
+)
+
+echo.
+
+:: Ping Test
+if "%~5"=="1" (
+	echo   [$] Ping Test
+) else (
+	echo   [ ] Ping Test
+)
+
+call:space-lg
